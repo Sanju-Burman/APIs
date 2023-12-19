@@ -69,17 +69,21 @@ public class AssignController {
 		}
 	}
 	
-//	@GetMapping("/byexp/{exp}")
-//	public ResponseEntity<?> DataByExp(@PathVariable int exp){
-//		
-//			Iterable<Integer> ids = new ArrayList<>();
-//			ids=assignServ.dataByExp(exp);
-//			List<List<PersonalInfo>> p3 = new ArrayList<>();
-//			
-//			p3=repo.findAllById(ids);
-//			return new ResponseEntity<>(p3, HttpStatus.OK);
-//		
-//	}
+	@GetMapping("/byexp/{exp}")
+	public ResponseEntity<?> DataByExp(@PathVariable int exp){
+	    List<Integer> ids = assignServ.dataByExp(exp);
+	    List<PersonalInfo> p3 = new ArrayList<>();
+	    if(!ids.isEmpty()) {
+		    for(Integer id : ids){
+		        Optional<PersonalInfo>info=assignServ.getPersonalInfoById(Long.valueOf(id));
+		        info.ifPresent(p3::add);
+		    }
+		    return new ResponseEntity<>(p3, HttpStatus.OK);
+	    }
+	    
+	    return new ResponseEntity<>("No PersonalInfo found for the given exp", HttpStatus.NOT_FOUND);
+	    
+	}
 	
 	
 	@PostMapping("/reg")
